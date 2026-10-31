@@ -8,6 +8,7 @@ def test_homepage():
     assert response.status_code == 200
     assert b"Department Information Service" in response.data
     assert b"support@example.com" in response.data
+    assert b"Application Version:</strong> 1.1.0" in response.data
 
 
 def test_health():
@@ -16,7 +17,7 @@ def test_health():
 
     assert response.status_code == 200
     assert response.json["status"] == "healthy"
-    assert response.json["version"] == "1.0.0"
+    assert response.json["version"] == "1.1.0"
 
 
 def test_unknown_page():
