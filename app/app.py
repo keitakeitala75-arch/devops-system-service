@@ -2,12 +2,12 @@ from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 
 
 @app.route("/")
 def home():
-    return """
+    return f"""
     <h1>Department Information Service</h1>
 
     <h2>Service Information</h2>
@@ -15,7 +15,7 @@ def home():
     <p><strong>Service:</strong> Department Information Portal</p>
     <p><strong>Support:</strong> support@example.com</p>
     <p><strong>Working Hours:</strong> Sunday - Thursday, 08:00 - 17:00</p>
-    <p><strong>Application Version:</strong> 1.0.0</p>
+    <p><strong>Application Version:</strong> {APP_VERSION}</p>
     <p><strong>Status:</strong> Running</p>
     """
 
