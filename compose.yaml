@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    container_name: devops-container
+    ports:
+      - "5000:5000"
+    volumes:
+      - devops-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  devops-data:
+    external: true

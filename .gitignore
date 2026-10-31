@@ -1,0 +1,21 @@
+# Python virtual environment
+.venv/
+venv/
+
+# Python temporary files
+__pycache__/
+*.pyc
+
+# Pytest files
+.pytest_cache/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Operating system files
+.DS_Store
+
+# IDE settings
+.vscode/
+.idea/
