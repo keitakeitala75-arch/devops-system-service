@@ -20,8 +20,29 @@ def test_health():
     assert response.json["version"] == "1.1.0"
 
 
+def test_info():
+    client = app.test_client()
+    response = client.get("/info")
+
+    assert response.status_code == 200
+    assert response.json["status"] == "operational"
+    assert response.json["version"] == "1.1.0"
+    assert response.json["app_name"] == "Department Information Portal"
+    assert response.json["environment"] == "production"
+    assert response.json["support_contact"] == "support@example.com"
+    assert isinstance(response.json["uptime_seconds"], int)
+    assert response.json["uptime_seconds"] >= 0
+
+
 def test_unknown_page():
     client = app.test_client()
     response = client.get("/unknown")
 
     assert response.status_code == 404
+
+
+def test_method_not_allowed():
+    client = app.test_client()
+    response = client.post("/health")
+
+    assert response.status_code == 405

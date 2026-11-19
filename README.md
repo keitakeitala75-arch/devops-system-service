@@ -39,6 +39,17 @@ devops-project/
 │   └── app.py
 ├── tests/
 │   └── test_app.py
+├── scripts/
+│   ├── monitor.sh
+│   └── rollback.sh
+├── docs/
+│   └── deployment-checklist.md
+├── records/
+│   ├── change-records.md
+│   ├── incident-record.md
+│   ├── individual-contributions-adeel.md
+│   ├── risk-register.md
+│   └── task-plan.md
 ├── .github/
 │   └── workflows/
 │       └── ci.yml
@@ -55,12 +66,26 @@ devops-project/
 |---|---|
 | `/` | Displays department service information |
 | `/health` | Returns application health status and version |
+| `/info` | Returns runtime metadata, uptime, and contact details |
 
 Example health response:
 
 ```json
 {
   "status": "healthy",
+  "version": "1.1.0"
+}
+```
+
+Example info response:
+
+```json
+{
+  "app_name": "Department Information Portal",
+  "environment": "production",
+  "status": "operational",
+  "support_contact": "support@example.com",
+  "uptime_seconds": 120,
   "version": "1.1.0"
 }
 ```
@@ -231,7 +256,14 @@ Docker image identifiers and CI artifact information should be recorded in the p
 
 ## 11. Monitoring
 
-The following commands are useful for monitoring the deployment.
+The project provides an automated monitoring script that checks the `/health` and `/info` endpoints, container runtime status, real-time Docker CPU/memory utilization, and host disk space:
+
+```bash
+chmod +x scripts/monitor.sh
+./scripts/monitor.sh http://localhost:5000
+```
+
+Individual monitoring commands:
 
 ### Container status
 
@@ -267,7 +299,18 @@ curl -i http://localhost:5000/health
 
 The project retains the previous v1.0.0 Docker image for rollback.
 
-The rollback procedure is:
+### Automated Rollback
+
+An automated rollback script is provided to stop the running container, launch the target rollback image, and poll the health check endpoint until recovery is verified:
+
+```bash
+chmod +x scripts/rollback.sh
+./scripts/rollback.sh devops-service:ffc8ce2
+```
+
+### Manual Rollback Procedure
+
+The manual rollback procedure is:
 
 1. Identify the currently deployed version.
 2. Verify that the previous Docker image is available.
