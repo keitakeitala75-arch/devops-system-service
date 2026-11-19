@@ -12,7 +12,7 @@
 |---|---|---|
 | **Keita Nvamba** | Service Architecture & Base CI/CD | Flask application core, Dockerfile containerization, GitHub Actions CI workflow, base documentation. |
 | **Faris** | Linux Environment & Provisioning | Linux system administration, service user creation, permissions, firewall rules (`scripts/setup-server.sh`). |
-| **Adeel Ahmad** | Service Operations, Monitoring & Recovery | Automated monitoring (`scripts/monitor.sh`), service rollback automation (`scripts/rollback.sh`), `/info` endpoint & edge testing, operational records & checklists. |
+| **Adeel Ahmad** | Application Testing & CI/CD Documentation | Automated Pytest suite design (positive, negative, edge cases), Flake8 static code quality enforcement, GitHub Actions CI verification, artifact traceability, and CI/CD technical documentation. |
 
 ## 5-Week Milestone Timeline
 
