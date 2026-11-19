@@ -1,33 +1,61 @@
 #!/bin/bash
 # Server setup script for devops-system-service
-# Creates a service user, sets permissions,
-# configures the firewall, and shows system resources.
 
-set -e
+set -euo pipefail
 
-APP_USER="devops"
+APP_USER="devops-service"
+APP_GROUP="devops"
 APP_DIR="/opt/devops-system-service"
 APP_PORT=5000
 
-# 1. Create a system user for the app (no login shell)
-if ! id "$APP_USER" &>/dev/null; then
-  sudo useradd --system --create-home --shell /usr/sbin/nologin "$APP_USER"
-  echo "User $APP_USER created"
+# Private network must be supplied by the administrator.
+if [[ -z "${ALLOWED_SUBNET:-}" ]]; then
+    echo "ERROR: Set ALLOWED_SUBNET before running this script."
+    exit 1
 fi
 
-# 2. Create app directory and set ownership and permissions
+# Check required commands and existing group.
+for cmd in useradd ufw; do
+    command -v "$cmd" >/dev/null || {
+        echo "ERROR: $cmd is not installed."
+        exit 1
+    }
+done
+
+if ! getent group "$APP_GROUP" >/dev/null; then
+    echo "ERROR: Group $APP_GROUP does not exist."
+    exit 1
+fi
+
+# Create service user if it does not exist.
+if ! id "$APP_USER" >/dev/null 2>&1; then
+    sudo useradd --system --create-home \
+        --gid "$APP_GROUP" \
+        --shell /usr/sbin/nologin "$APP_USER"
+    echo "Service user created."
+fi
+
+# Configure application directory.
 sudo mkdir -p "$APP_DIR"
-sudo chown -R "$APP_USER":"$APP_USER" "$APP_DIR"
+sudo chown "$APP_USER":"$APP_GROUP" "$APP_DIR"
 sudo chmod 750 "$APP_DIR"
 
-# 3. Configure the firewall (allow SSH and the app port)
+# Protect SSH before configuring the firewall.
 sudo ufw allow OpenSSH
-sudo ufw allow "$APP_PORT"/tcp
+
+# Add private-network access to application port.
+sudo ufw allow from "$ALLOWED_SUBNET" \
+    to any port "$APP_PORT" proto tcp
+
+# Enable UFW only after SSH rule is added.
 sudo ufw --force enable
 sudo ufw status
 
-# 4. Show system resources
+# Display system resources.
 echo "Disk usage:"
 df -h /
+
 echo "Memory usage:"
 free -h
+
+echo "Server setup completed."
