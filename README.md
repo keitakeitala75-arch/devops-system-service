@@ -43,7 +43,10 @@ devops-project/
 │   ├── monitor.sh
 │   └── rollback.sh
 ├── docs/
-│   └── deployment-checklist.md
+│   ├── ci-cd-pipeline.md
+│   ├── deployment-checklist.md
+│   ├── evidence-index.md
+│   └── testing-guide.md
 ├── records/
 │   ├── change-records.md
 │   ├── incident-record.md
@@ -123,6 +126,8 @@ pip install -r requirements.txt
 ```bash
 python -m pytest -v
 ```
+
+For detailed test suite documentation and assertion criteria, see [Application Testing Guide](docs/testing-guide.md).
 
 ### Run code quality checks
 
@@ -240,6 +245,10 @@ The pipeline performs the following operations:
 8. Uploads the Docker artifact to GitHub Actions.
 
 The pipeline runs for pull requests targeting `main` and pushes to `main`.
+
+For in-depth architectural details, quality gate enforcement, and artifact traceability mapping, refer to:
+- [CI/CD Pipeline Architecture & Operational Guide](docs/ci-cd-pipeline.md)
+- [Consolidated Evidence Index](docs/evidence-index.md)
 
 ## 10. Release Versions
 
